@@ -23,28 +23,40 @@ public class BoccoAPI {
     private String Password;
     private String APIEndpoint = "https://api.bocco.me/alpha/";
 
+    private String accsessToken;
+
     public BoccoAPI(String APIKey, String Email, String Password) {
         this.APIKey = APIKey;
         this.Email = Email;
         this.Password = Password;
     }
 
-    public String createSessions() {
+    public boolean createSessions() {
+        String data = "apikey = " + this.APIKey + "&email=" + this.Email + "&password=" + this.Password;
+
+        String json = this.post("sessions", data, "application/x-www-form-urlencoded");
+
+        System.out.println(json);
+        if(json.length() == 0 ) return false;
+        
+        return true;
+    }
+
+    public String post(String URL, String data, String ContentType) {
+
         HttpURLConnection connection = null;
         StringBuilder result = new StringBuilder();
 
         try {
-            URL url = new URL(this.APIEndpoint + "sessions");
+            URL url = new URL(this.APIEndpoint + URL);
 
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Content-Type", ContentType);
 
             OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-            out.write("apikey =" + this.APIKey);
-            out.write("email =" + this.Email);
-            out.write("password =" + this.Password);
+            out.write(data);
             out.close();
             connection.connect();
 
@@ -61,7 +73,7 @@ public class BoccoAPI {
                 final InputStreamReader inReader = new InputStreamReader(in, encoding);
                 final BufferedReader bufReader = new BufferedReader(inReader);
                 String line = null;
-                
+
                 // 1行ずつテキストを読み込む
                 while ((line = bufReader.readLine()) != null) {
                     result.append(line);
@@ -84,8 +96,12 @@ public class BoccoAPI {
         return result.toString();
     }
 
-    public void POST(String Text) {
-
+    public String getAccsessToken() {
+        return accsessToken;
     }
-    
+
+    private void setAccsessToken(String accsessToken) {
+        this.accsessToken = accsessToken;
+    }
+
 }
