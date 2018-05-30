@@ -84,7 +84,8 @@ public class BoccoAPI {
         return result.toString();
     }
 
-//    public void POST(String ContentType, String URL) {
-//
-//    }
+    public void POST(String Text) {
+
+    }
+    
 }
