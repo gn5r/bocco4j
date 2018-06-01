@@ -4,6 +4,7 @@
 
 - 2018年5月30日(水) initial commit
 - 2018年6月1日(金) JSONObjectライブラリを利用し、jsonパース。postメソッド・createSessionsメソッドの修正
+- 2018年6月2日(土) コード見直し、コメントを付与。accesstoken取得可能に
 ----
 
 ## 当ライブラリの使い方
