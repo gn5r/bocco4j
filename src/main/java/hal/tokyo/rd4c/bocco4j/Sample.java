@@ -12,13 +12,13 @@ package hal.tokyo.rd4c.bocco4j;
 public class Sample {
 
     public static void main(String[] args) throws Exception {
-        BoccoAPI boccoApi = new BoccoAPI("APIKey",
-                "example@bocco4j.co.jp",
-                "password");
+        BoccoAPI boccoApi = new BoccoAPI(args[0],
+                args[1],
+                args[2]);
 
         boccoApi.createSessions();
         boccoApi.getFirstRooID();
 
-        boccoApi.postMessage(args[0]);
+        boccoApi.postMessage(args[3]);
     }
 }
