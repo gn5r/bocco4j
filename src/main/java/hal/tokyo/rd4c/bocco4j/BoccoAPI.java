@@ -42,7 +42,7 @@ public class BoccoAPI {
         /*    接続先URLのインスタンス生成    */
         URL urls = new URL(Host + url);
         HttpURLConnection con = (HttpURLConnection) urls.openConnection();
-        StringBuilder result = new StringBuilder();
+        String result = "";
 
         /*    ボディ送信を許可    */
         con.setDoInput(true);
@@ -64,25 +64,24 @@ public class BoccoAPI {
         /*    HTTP通信の確認    */
         final int statusCode = con.getResponseCode();
 
-        if (statusCode == HttpURLConnection.HTTP_OK) {
+        switch (statusCode) {
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    con.getInputStream()));
-            String body = "";
+            case HttpURLConnection.HTTP_OK:
+                result = getResut(con);
+                break;
 
-            /*    レスポンスボディの情報を1行ずつ読み取る    */
-            while ((body = reader.readLine()) != null) {
-                result.append(body);
-            }
-            reader.close();
+            case HttpURLConnection.HTTP_CREATED:
+                result = getResut(con);
+                break;
 
-        } else {
-            System.out.println("ERROR Code:" + String.valueOf(statusCode));
+            case HttpURLConnection.HTTP_UNAUTHORIZED:
+                result = "APIKey,Email,Passwordが間違っています";
+                break;
         }
 
         con.disconnect();
 
-        return result.toString();
+        return result;
     }
 
     public boolean createSessions() throws Exception {
@@ -98,9 +97,7 @@ public class BoccoAPI {
         }
 
         /*    JSONパース    */
-        JSONObject jsonObj = new JSONObject(json);
-        /*    パースした内容からaccess_tokenを取り出す    */
-        accsessToken = jsonObj.getString("access_token");
+        accsessToken = parseJson(json, "access_token");
 
         System.out.println("---- access_token ----");
         System.out.println(accsessToken);
@@ -113,7 +110,7 @@ public class BoccoAPI {
         /*    接続先URLのインスタンス生成    */
         URL urls = new URL(Host + url + data);
         HttpURLConnection con = (HttpURLConnection) urls.openConnection();
-        StringBuilder result = new StringBuilder();
+        String result = "";
 
         /*    レスポンスボディ受信を許可    */
         con.setDoOutput(true);
@@ -128,25 +125,20 @@ public class BoccoAPI {
         /*    HTTP通信の確認    */
         final int statusCode = con.getResponseCode();
 
-        if (statusCode == HttpURLConnection.HTTP_OK) {
+        switch (statusCode) {
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    con.getInputStream()));
-            String body = "";
+            case HttpURLConnection.HTTP_OK:
+                result = getResut(con);
+                break;
 
-            /*    レスポンスボディの情報を1行ずつ読み取る    */
-            while ((body = reader.readLine()) != null) {
-                result.append(body);
-            }
-            reader.close();
-
-        } else {
-            System.out.println("ERROR Code:" + String.valueOf(statusCode));
+            case HttpURLConnection.HTTP_UNAUTHORIZED:
+                result = "APIKey,Email,Passwordが間違っています";
+                break;
         }
 
         con.disconnect();
 
-        return result.toString();
+        return result;
     }
 
     public boolean getFirstRooID() throws Exception {
@@ -162,8 +154,7 @@ public class BoccoAPI {
         room = room.substring(0, room.indexOf("\"background_image\"") - 1) + "}\n";
 
         /*    JSONパース    */
-        JSONObject jsonObj = new JSONObject(room);
-        roomID = jsonObj.getString("uuid");
+        roomID = parseJson(room, "uuid");
 
         System.out.println("---- roomID ----");
         System.out.println(roomID);
@@ -185,7 +176,29 @@ public class BoccoAPI {
         if (json.matches("")) {
             return false;
         }
-
+        System.out.println("送信:" + parseJson(json, "text"));
         return true;
+    }
+
+    private String parseJson(String json, String key) {
+        JSONObject jsonObj = new JSONObject(json);
+
+        return jsonObj.getString(key);
+    }
+
+    private String getResut(HttpURLConnection con) throws Exception {
+        
+        StringBuilder result = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                con.getInputStream()));
+        String body;
+
+        /*    レスポンスボディの情報を1行ずつ読み取る    */
+        while ((body = reader.readLine()) != null) {
+            result.append(body);
+        }
+        reader.close();
+
+        return result.toString();
     }
 }

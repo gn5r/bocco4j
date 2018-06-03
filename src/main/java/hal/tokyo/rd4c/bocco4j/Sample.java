@@ -13,15 +13,12 @@ public class Sample {
 
     public static void main(String[] args) throws Exception {
         BoccoAPI boccoApi = new BoccoAPI("APIKey",
-                "exsample@bocco4j.jp",
+                "example@bocco4j.co.jp",
                 "password");
 
         boccoApi.createSessions();
         boccoApi.getFirstRooID();
-        if (boccoApi.postMessage(args[0]) == true) {
-            System.out.println("送信しました");
-        } else {
-            System.out.println("失敗です");
-        }
+
+        boccoApi.postMessage(args[0]);
     }
 }
