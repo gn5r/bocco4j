@@ -12,9 +12,9 @@ package hal.tokyo.rd4c.bocco4j;
 public class Sample {
 
     public static void main(String[] args) throws Exception {
-        BoccoAPI boccoApi = new BoccoAPI("oXclKHqmDQabjqfuLr2GNd0ASovTuzVyhAtvnyfDEbYGJD4hrIkmZ6hcUPqeP5CF",
-                "terashima.hidetoshi.150147@roivy.net",
-                "h8910teto");
+        BoccoAPI boccoApi = new BoccoAPI("APIKey",
+                "exsample@bocco4j.jp",
+                "password");
 
         boccoApi.createSessions();
         boccoApi.getFirstRooID();
