@@ -16,9 +16,10 @@ public class Sample {
                 args[1],
                 args[2]);
 
-        boccoApi.createSessions();
-        boccoApi.getFirstRooID();
+        if (boccoApi.createSessions() == true) {
+            boccoApi.getFirstRooID();
 
-        boccoApi.postMessage(args[3]);
+            boccoApi.postMessage(args[3]);
+        }
     }
 }

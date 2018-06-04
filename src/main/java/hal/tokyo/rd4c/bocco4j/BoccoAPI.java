@@ -75,7 +75,7 @@ public class BoccoAPI {
                 break;
 
             case HttpURLConnection.HTTP_UNAUTHORIZED:
-                result = "APIKey,Email,Passwordが間違っています";
+                result = "";
                 break;
         }
 
@@ -93,6 +93,7 @@ public class BoccoAPI {
         String json = post(Session, data);
 
         if (json.matches("")) {
+            System.out.println("APIKey,Email,Passwordが間違っています");
             return false;
         }
 
@@ -132,7 +133,7 @@ public class BoccoAPI {
                 break;
 
             case HttpURLConnection.HTTP_UNAUTHORIZED:
-                result = "APIKey,Email,Passwordが間違っています";
+                result = "";
                 break;
         }
 
@@ -147,6 +148,7 @@ public class BoccoAPI {
         String json = get(Rooms + Rooms_Joined, data);
 
         if (json.matches("")) {
+            System.out.println("APIKey,Email,Passwordが間違っています");
             return false;
         }
 
@@ -187,7 +189,7 @@ public class BoccoAPI {
     }
 
     private String getResut(HttpURLConnection con) throws Exception {
-        
+
         StringBuilder result = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(
                 con.getInputStream()));
