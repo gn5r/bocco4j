@@ -66,16 +66,24 @@ public class BoccoAPI {
 
         switch (statusCode) {
 
+            /*    レスポンスコード :200    */
             case HttpURLConnection.HTTP_OK:
                 result = getResut(con);
                 break;
 
+            /*    レスポンスコード:201    */
             case HttpURLConnection.HTTP_CREATED:
                 result = getResut(con);
                 break;
 
+            /*    レスポンスコード:401    */
             case HttpURLConnection.HTTP_UNAUTHORIZED:
-                result = "";
+                result = "401";
+                break;
+
+            /*    レスポンスコード:400    */
+            case HttpURLConnection.HTTP_BAD_REQUEST:
+                result = "400";
                 break;
         }
 
@@ -84,6 +92,7 @@ public class BoccoAPI {
         return result;
     }
 
+    /*    access_tokenを取得する    */
     public boolean createSessions() throws Exception {
 
         /*    Postデータを作成    */
@@ -92,9 +101,15 @@ public class BoccoAPI {
         /*    JSONデータ取得    */
         String json = post(Session, data);
 
-        if (json.matches("")) {
-            System.out.println("APIKey,Email,Passwordが間違っています");
-            return false;
+        /*    レスポンスコード読取り    */
+        switch (json) {
+            case "401":
+                System.out.println("APIKey,Email,Passwordが間違っています");
+                return false;
+
+            case "400":
+                System.out.println("BAD REQUEST");
+                return false;
         }
 
         /*    JSONパース    */
@@ -133,7 +148,11 @@ public class BoccoAPI {
                 break;
 
             case HttpURLConnection.HTTP_UNAUTHORIZED:
-                result = "";
+                result = "401";
+                break;
+
+            case HttpURLConnection.HTTP_BAD_REQUEST:
+                result = "400";
                 break;
         }
 
@@ -142,14 +161,21 @@ public class BoccoAPI {
         return result;
     }
 
+    /*    1件目のroom情報を取得しIDを取り出す    */
     public boolean getFirstRooID() throws Exception {
         String data = "access_token=" + accsessToken;
 
         String json = get(Rooms + Rooms_Joined, data);
 
-        if (json.matches("")) {
-            System.out.println("APIKey,Email,Passwordが間違っています");
-            return false;
+        /*    レスポンスコード読取り    */
+        switch (json) {
+            case "401":
+                System.out.println("APIKey,Email,Passwordが間違っています");
+                return false;
+
+            case "400":
+                System.out.println("BAD REQUEST");
+                return false;
         }
 
         String room = json.substring(json.indexOf("[{\"uuid\":\"") + 1);
@@ -164,6 +190,7 @@ public class BoccoAPI {
         return true;
     }
 
+    /*    テキストメッセージ送信    */
     public boolean postMessage(String message) throws Exception {
         /*    UUID乱数ベースの作成*/
         UUID uuid = UUID.randomUUID();
@@ -175,19 +202,28 @@ public class BoccoAPI {
 
         String json = post(Rooms + "/" + roomID + Message, data);
 
-        if (json.matches("")) {
-            return false;
+        switch (json) {
+            case "401":
+                System.out.println("APIKey,Email,Passwordが間違っています");
+                return false;
+
+            case "400":
+                System.out.println("BAD REQUEST");
+                return false;
         }
+
         System.out.println("送信:" + parseJson(json, "text"));
         return true;
     }
 
+    /*    JSONをパースして必要な要素を取り出す    */
     private String parseJson(String json, String key) {
         JSONObject jsonObj = new JSONObject(json);
 
         return jsonObj.getString(key);
     }
 
+    /*    レスポンスボディ取得    */
     private String getResut(HttpURLConnection con) throws Exception {
 
         StringBuilder result = new StringBuilder();
