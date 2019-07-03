@@ -6,6 +6,7 @@
 - 2018年6月1日(金) JSONObjectライブラリを利用し、jsonパース。postメソッド・createSessionsメソッドの修正
 - 2018年6月2日(土) コード見直し、コメントを付与。accesstoken取得可能に
 - 2018年6月4日(月) 必要機能実装完了。Boccoに喋らせることを確認
+- 2019年7月4日(木) BoccoAPI.javaのメソッドにjavadocコメントを追記。pom.xmlの修正
 ----
 
 ## 当ライブラリの使い方
